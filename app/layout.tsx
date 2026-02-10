@@ -6,6 +6,10 @@ import { Footer } from '@/components/footer'
 export const metadata: Metadata = {
   title: 'TalentBridge | Remote Hiring Agency',
   description: 'We connect top remote talent with leading companies worldwide',
+  robots: {
+    index: false,
+    follow: false,
+  },
 }
 
 export default function RootLayout({
