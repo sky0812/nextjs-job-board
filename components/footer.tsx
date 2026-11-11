@@ -75,7 +75,7 @@ export function Footer() {
         </div>
 
         <div className="mt-12 border-t border-dark-800 pt-8 text-center text-sm">
-          © 2025 TalentBridge. All rights reserved.
+          © {new Date().getFullYear()} TalentBridge. All rights reserved.
         </div>
       </div>
     </footer>
