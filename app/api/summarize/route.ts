@@ -30,9 +30,13 @@ export async function POST(req: Request) {
     },
     body: JSON.stringify({
       model: MODEL,
-      messages: [{ role: 'user', content: prompt }],
+      messages: [
+        { role: 'system', content: 'You output ONLY 3 short bullets, one per line, starting with "- ". No preamble, no reasoning, no closing.' },
+        { role: 'user', content: prompt },
+      ],
       temperature: 0.3,
-      max_tokens: 200,
+      max_tokens: 600,
+      reasoning_effort: 'low',
     }),
   })
   if (!res.ok) {
@@ -41,11 +45,15 @@ export async function POST(req: Request) {
     return Response.json({ error: 'upstream', status: res.status, detail: detail.slice(0, 400) }, { status: 502 })
   }
   const data = await res.json()
-  const text = (data?.choices?.[0]?.message?.content || '').trim()
+  const msg = data?.choices?.[0]?.message || {}
+  const text = ((msg.content || msg.reasoning || '') + '').trim()
   const bullets = text
     .split('\n')
     .map((l: string) => l.replace(/^[-*•\d.)\s]+/, '').trim())
-    .filter((l: string) => l.length > 0)
+    .filter((l: string) => l.length > 0 && l.length < 300)
     .slice(0, 3)
+  if (bullets.length === 0) {
+    return Response.json({ bullets: [], debug: { raw: text.slice(0, 400), fields: Object.keys(msg) } })
+  }
   return Response.json({ bullets })
 }
