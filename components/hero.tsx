@@ -7,7 +7,17 @@ export function Hero() {
       <div className="relative mx-auto max-w-6xl px-4 py-24 md:py-32">
         <div className="grid items-center gap-12 md:grid-cols-2">
           <div>
-            <h1 className="animate-fade-up text-4xl font-bold leading-tight text-white md:text-5xl lg:text-6xl">
+            <Link
+              href="/jobs"
+              className="inline-flex items-center gap-2 rounded-full bg-white/15 backdrop-blur border border-white/25 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-white hover:bg-white/25 transition"
+            >
+              <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+              </svg>
+              <span>New: AI summaries on every job</span>
+              <span className="text-primary-200">→</span>
+            </Link>
+            <h1 className="mt-5 animate-fade-up text-4xl font-bold leading-tight text-white md:text-5xl lg:text-6xl">
               Find Your Next
               <span className="block text-secondary-300">Remote Superstar</span>
             </h1>
@@ -18,9 +28,12 @@ export function Hero() {
             <div className="mt-8 flex flex-wrap gap-4">
               <Link
                 href="/jobs"
-                className="rounded-lg bg-white px-6 py-3 font-semibold text-primary-700 transition hover:bg-primary-50"
+                className="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 font-semibold text-primary-700 transition hover:bg-primary-50"
               >
-                Browse Talent
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                </svg>
+                Try the AI Job Board
               </Link>
               <Link
                 href="/contact"

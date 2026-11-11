@@ -1,4 +1,4 @@
-const services = [
+const services: Array<{ title: string, desc: string, icon: React.ReactNode, highlighted?: boolean }> = [
   {
     title: 'Talent Sourcing',
     desc: 'We tap into our global network of 50,000+ vetted professionals to find your perfect match.',
@@ -38,9 +38,10 @@ const services = [
   {
     title: 'AI Quick Summary',
     desc: 'Every job card ships with a one-click, AI-generated 3-bullet summary. Powered by Llama on Groq, instant response.',
+    highlighted: true,
     icon: (
       <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
       </svg>
     ),
   },
@@ -58,7 +59,22 @@ export function Services() {
         </div>
 
         <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {services.map((service, i) => (
+          {services.map((service, i) => service.highlighted ? (
+            <div
+              key={i}
+              className="relative overflow-hidden rounded-xl bg-gradient-to-br from-primary-600 to-secondary-600 p-6 shadow-xl ring-1 ring-primary-400 transition hover:shadow-2xl hover:-translate-y-1"
+            >
+              <div className="absolute -top-8 -right-8 h-28 w-28 rounded-full bg-white/10 blur-xl" />
+              <div className="absolute top-3 right-3 rounded-full bg-white/90 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary-700">
+                New
+              </div>
+              <div className="relative flex h-14 w-14 items-center justify-center rounded-lg bg-white/15 text-white backdrop-blur">
+                {service.icon}
+              </div>
+              <h3 className="relative mt-4 text-lg font-semibold text-white">{service.title}</h3>
+              <p className="relative mt-2 text-sm text-primary-50">{service.desc}</p>
+            </div>
+          ) : (
             <div
               key={i}
               className="rounded-xl bg-white p-6 shadow-sm transition hover:shadow-lg hover:-translate-y-1"

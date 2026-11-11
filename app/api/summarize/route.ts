@@ -7,15 +7,21 @@ function clean(html: string) {
 
 export async function POST(req: Request) {
   const body = await req.json().catch(() => null) as { title?: string, company?: string, description?: string } | null
-  if (!body?.description) {
-    return Response.json({ error: 'no description' }, { status: 400 })
+  if (!body) {
+    return Response.json({ error: 'no body' }, { status: 400 })
   }
   const key = process.env.GROQ_API_KEY
   if (!key) {
     return Response.json({ error: 'missing key' }, { status: 500 })
   }
-  const content = clean(body.description)
-  const prompt = `Summarize this job posting as 3 short bullet points. Each bullet starts with "- " and is under 15 words. Focus on: role/responsibilities, must-have requirements, and format/perks. Reply with only the 3 bullets, nothing else.\n\nTitle: ${body.title || ''}\nCompany: ${body.company || ''}\n\nDescription:\n${content}`
+  const content = clean(body.description || '')
+  const title = body.title || ''
+  const company = body.company || ''
+  if (!title && !company && !content) {
+    return Response.json({ error: 'empty job' }, { status: 400 })
+  }
+  const descBlock = content ? `\n\nDescription:\n${content}` : '\n\n(No description provided. Infer plausible bullets from title and company only, and mark uncertain ones with "likely" or "typically".)'
+  const prompt = `Summarize this job posting as 3 short bullet points. Each bullet starts with "- " and is under 15 words. Focus on: role/responsibilities, must-have requirements, and format/perks. Reply with only the 3 bullets, nothing else.\n\nTitle: ${title}\nCompany: ${company}${descBlock}`
   const res = await fetch(ENDPOINT, {
     method: 'POST',
     headers: {

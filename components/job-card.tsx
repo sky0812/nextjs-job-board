@@ -88,7 +88,7 @@ export function JobCard({ job }: Props) {
             ))}
           </ul>
         </div>
-      ) : (job.description && job.description.trim().length > 40) ? (
+      ) : (
         <button
           type="button"
           onClick={summarize}
@@ -113,7 +113,7 @@ export function JobCard({ job }: Props) {
             </>
           )}
         </button>
-      ) : null}
+      )}
       {error && <p className="mt-2 text-xs text-red-500">Couldn't summarize. Try again.</p>}
     </Link>
   )
