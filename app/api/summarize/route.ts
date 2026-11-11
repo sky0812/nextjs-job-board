@@ -36,7 +36,9 @@ export async function POST(req: Request) {
     }),
   })
   if (!res.ok) {
-    return Response.json({ error: 'upstream' }, { status: 502 })
+    const detail = await res.text().catch(() => '')
+    console.error('groq error', res.status, detail)
+    return Response.json({ error: 'upstream', status: res.status, detail: detail.slice(0, 400) }, { status: 502 })
   }
   const data = await res.json()
   const text = (data?.choices?.[0]?.message?.content || '').trim()
