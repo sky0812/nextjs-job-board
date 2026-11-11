@@ -1,0 +1,43 @@
+const MODEL = process.env.GROQ_MODEL || 'llama-3.1-8b-instant'
+const ENDPOINT = 'https://api.groq.com/openai/v1/chat/completions'
+
+function clean(html: string) {
+  return html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 4000)
+}
+
+export async function POST(req: Request) {
+  const body = await req.json().catch(() => null) as { title?: string, company?: string, description?: string } | null
+  if (!body?.description) {
+    return Response.json({ error: 'no description' }, { status: 400 })
+  }
+  const key = process.env.GROQ_API_KEY
+  if (!key) {
+    return Response.json({ error: 'missing key' }, { status: 500 })
+  }
+  const content = clean(body.description)
+  const prompt = `Summarize this job posting as 3 short bullet points. Each bullet starts with "- " and is under 15 words. Focus on: role/responsibilities, must-have requirements, and format/perks. Reply with only the 3 bullets, nothing else.\n\nTitle: ${body.title || ''}\nCompany: ${body.company || ''}\n\nDescription:\n${content}`
+  const res = await fetch(ENDPOINT, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${key}`,
+    },
+    body: JSON.stringify({
+      model: MODEL,
+      messages: [{ role: 'user', content: prompt }],
+      temperature: 0.3,
+      max_tokens: 200,
+    }),
+  })
+  if (!res.ok) {
+    return Response.json({ error: 'upstream' }, { status: 502 })
+  }
+  const data = await res.json()
+  const text = (data?.choices?.[0]?.message?.content || '').trim()
+  const bullets = text
+    .split('\n')
+    .map((l: string) => l.replace(/^[-*•\d.)\s]+/, '').trim())
+    .filter((l: string) => l.length > 0)
+    .slice(0, 3)
+  return Response.json({ bullets })
+}
