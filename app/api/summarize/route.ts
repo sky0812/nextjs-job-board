@@ -1,4 +1,4 @@
-const MODEL = process.env.GROQ_MODEL || 'llama-3.1-8b-instant'
+const MODEL = process.env.GROQ_MODEL || 'llama-3.3-70b-versatile'
 const ENDPOINT = 'https://api.groq.com/openai/v1/chat/completions'
 
 function clean(html: string) {
